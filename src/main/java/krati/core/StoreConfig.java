@@ -8,9 +8,12 @@ import java.io.PrintStream;
 import java.io.PrintWriter;
 import java.io.Reader;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import krati.core.segment.MappedSegmentFactory;
 import krati.core.segment.SegmentFactory;
+import krati.store.DataStoreHandler;
+import krati.store.DefaultDataStoreHandler;
 import krati.util.FnvHashFunction;
 import krati.util.HashFunction;
 
@@ -32,6 +35,10 @@ public class StoreConfig extends StoreParams {
     private final int _initialCapacity;
     private SegmentFactory _segmentFactory = null;
     private HashFunction<byte[]> _hashFunction = null;
+    private int _retention = -1;
+    private TimeUnit _retentionUnit = TimeUnit.DAYS;
+    private DataStoreHandler _dataStoreHandler = new DefaultDataStoreHandler();
+    
     
     /**
      * Creates the configuration of a target store
@@ -293,6 +300,50 @@ public class StoreConfig extends StoreParams {
         if(getSegmentCompactFactor() < StoreParams.SEGMENT_COMPACT_FACTOR_MIN || getSegmentCompactFactor() > StoreParams.SEGMENT_COMPACT_FACTOR_MAX) {
             throw new InvalidStoreConfigException(StoreParams.PARAM_SEGMENT_COMPACT_FACTOR + "=" + getSegmentCompactFactor());
         }
+    }
+    
+    /**
+     * Sets retention policy.
+     * @param retention Number of units to keep
+     * @param unit Unit duration
+     */
+    public void setRetention(int retention,TimeUnit unit){
+    	_retention = retention;
+    	_retentionUnit = unit;
+    }
+    
+    /**
+     * Returns retention
+     * @return number of units to keep
+     */
+    public int getRetention(){
+    	return _retention;
+    }
+    
+    /**
+     * Returns retention unit duration
+     * @return retention unit duration
+     */
+    public TimeUnit getRetentionUnit(){
+    	return _retentionUnit;
+    }
+    
+    /**
+     * Sets data store handler
+     * @param dataStoreHandler
+     */
+    public void setDataStoreHandler(DataStoreHandler dataStoreHandler){
+    	if (dataStoreHandler == null){
+    		throw new IllegalArgumentException("data store handler cannot be null");
+    	}
+    	_dataStoreHandler = dataStoreHandler;
+    }
+    
+    /**
+     * @return currently configured data store handler
+     */
+    public DataStoreHandler getDataStoreHandler(){
+    	return _dataStoreHandler;
     }
     
     /**

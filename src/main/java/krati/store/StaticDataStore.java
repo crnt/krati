@@ -58,7 +58,7 @@ public class StaticDataStore implements DataStore<byte[], byte[]> {
         this._homeDir = _config.getHomeDir();
         
         // Create data store handler
-        _dataHandler = new DefaultDataStoreHandler();
+        _dataHandler = config.getDataStoreHandler();
         
         // Create address array
         AddressArray addressArray = createAddressArray(

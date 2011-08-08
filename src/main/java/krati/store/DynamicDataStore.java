@@ -74,7 +74,7 @@ public class DynamicDataStore implements DataStore<byte[], byte[]> {
         this._homeDir = config.getHomeDir();
         
         // Create data store handler
-        _dataHandler = new DefaultDataStoreHandler();
+        _dataHandler = config.getDataStoreHandler();
         
         // Create dynamic address array
         _addrArray = createAddressArray(
